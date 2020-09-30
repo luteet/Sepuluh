@@ -15,6 +15,7 @@ $(function(){
         $(e).attr('src', $(e).data('src')).removeAttr('data-src');
         $(e).prev('[data-srcset]').attr('srcset', $(e).prev('[data-srcset]').data('srcset')).removeAttr('data-srcset');
     }
+
     let imgLazy = $('.img-lazy-slider');
     imgLazy = imgLazy[0];
     //console.log($(imgLazy[0]));
@@ -27,15 +28,22 @@ $(function(){
             lazyLoadImg(imgLazy);
         }
     });
+    
+    
+    $('.form__input').focus(function() {
+        $(this).next('.form__input--icon').addClass('active');
+        
+    }).blur(function() {
+        $(this).next('.form__input--icon').removeClass('active');
+    });
 
-      //$('.img-lazy').next('spinner').addClass('loading');
       $('.img-lazy-slider').on('load', function() {
         $(this).addClass('loaded').parents('.slider__item').find('.spinner').addClass('loaded').next('.slider__item--content').addClass('loaded');
       });
       $('.img-lazy').on('load', function() {
           if(!$(this).hasClass('.img-lazy-slider')) {
             $(this).addClass('loaded').parents('picture').next('.spinner').addClass('loaded')
-            console.log('lol');
+            
           }
           
       });
@@ -273,8 +281,72 @@ $(function(){
         
     });
    
-    
-    
+    function formKeySwitch(settings) {
+        if (settings.formElem == undefined) {
+            return false;
+        }
+        
+        let form_input = settings.formElem,
+            inputChek = true,
+            focusClass = settings.focusClass,
+            inputLength = form_input.length - 1,
+            inputLast = $(form_input[inputLength]).data('input-id'),
+            inputId;
 
+
+            if (settings.focusClass == undefined) {
+                focusClass = 'focus';
+            }
+
+        function nextInput(e) {
+            if (e.data('input-id') != inputLast && inputChek == true) {
+                inputChek = false;
+                inputId = e.data('input-id');
+                inputId = inputId + 1;
+                $('.form-elem[data-input-id|="' + inputId + '"]').focus();
+                inputChek = true;
+                setTimeout(function () {
+                    inputChek = true;
+                }, 250);
+            }
+        }
+        function prevInput(e) {
+            if (e.data('input-id') != 1 && inputChek == true) {
+                inputChek = false;
+                inputId = e.data('input-id');
+                inputId = inputId - 1
+                $('.form-elem[data-input-id|="' + inputId + '"]').focus();
+                setTimeout(function () {
+                    inputChek = true;
+                }, 250);
+            }
+        }
+
+        $(form_input).focus(function () {
+            
+            $(this).parent().addClass(focusClass);
+            $(this).prev().addClass(focusClass);
+            $(this).on('keydown', function (e) {
+                if (e.which == 40) {
+                    nextInput($(this));
+                }
+                if (e.which == 38) {
+                    prevInput($(this));
+                }
+            });
+        })
+        .blur(function () {
+            if ($(this).val() == '') {
+                $(this).prev().removeClass(focusClass);
+            }
+            $(this).parent().removeClass(focusClass);
+        });
+    }
+    
+    formKeySwitch({
+
+    formElem: $('.form-elem')
+
+    });
 
 });
