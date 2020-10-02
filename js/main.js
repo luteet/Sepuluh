@@ -156,7 +156,7 @@ $(function(){
         }
         let lazyImgCheck;
         function imgLazyActive() {
-            lazyImgCheck = $(header).offset().top + $(window).height();
+            lazyImgCheck = $(header).offset().top + $(window).height() + 50;
             $.each($('.img-lazy'), function() {
                 if(lazyImgCheck >= $(this).offset().top && !$(this).hasClass('img-lazy-slider') && !$(this).hasClass('loaded')) {
                     lazyLoadImg($(this));
@@ -358,5 +358,7 @@ $(function(){
         $(this).parent('li').next('li').children('.footer__nav--btn').removeClass('hover-effect')
         $(this).parent('li').prev('li').children('.footer__nav--btn').removeClass('hover-effect')
     });
+
+    AOS.init();
 
 });
