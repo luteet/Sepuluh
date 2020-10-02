@@ -349,4 +349,14 @@ $(function(){
 
     });
 
+
+    $('.footer__nav--btn').hover(function() {
+        $(this).parent('li').next('li').children('.footer__nav--btn').addClass('hover-effect')
+        $(this).parent('li').prev('li').children('.footer__nav--btn').addClass('hover-effect')
+    },
+    function() {
+        $(this).parent('li').next('li').children('.footer__nav--btn').removeClass('hover-effect')
+        $(this).parent('li').prev('li').children('.footer__nav--btn').removeClass('hover-effect')
+    });
+
 });
