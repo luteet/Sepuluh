@@ -9,7 +9,6 @@ $(function(){
         appendDots: '.introduction__slider--dots'
     });
 
-
     function lazyLoadImg(e) {
         
         $(e).attr('src', $(e).data('src')).removeAttr('data-src');
@@ -18,11 +17,9 @@ $(function(){
 
     let imgLazy = $('.img-lazy-slider');
     imgLazy = imgLazy[0];
-    //console.log($(imgLazy[0]));
-    //lazyLoadImgSlider();
     $(imgLazy).attr('src', $(imgLazy).data('src')).removeAttr('data-src');
     $(imgLazy).prev('[data-srcset]').attr('srcset', $(imgLazy).prev('[data-srcset]').data('srcset')).removeAttr('data-srcset');
-    $('.introduction__slider--body').on('afterChange', function(event, slick, direction){
+    $('.introduction__slider--body').on('afterChange', function(){
         imgLazy = $(this).find('.slick-active').find('.img-lazy-slider');
         if(!$(imgLazy).hasClass('loaded')) {
             lazyLoadImg(imgLazy);
@@ -73,41 +70,12 @@ $(function(){
 
     customeMediaEvents(window);
 
-    /* let heightIntroductionBlock = $('.introduction__info').height();
-    console.log(heightIntroductionBlock);
-    $('.introduction').css('padding-top', heightIntroductionBlock + 'px');
-    console.log($('.introduction__body')); */
 
     function hHeader(settings) {
-        
 
-
-
-        if (settings == undefined) {
-            return false;
-        }
-    
-        if (settings.elemName == undefined) {
-            return false;
-        }
-    
-        if (settings.distance == undefined) {
-            settings.distance = 500;
-        }
-    
-        if (settings.fade == undefined) {
-            settings.fade = false;
-        }
-    
-        if (settings.speedAnim == undefined) {
-            settings.speedAnim = 200;
-        }
-
-    
-    
         let header = settings.elemName,
             distance = settings.distance,
-            scrollPrev = 0, ifHeaderTopClass, ifHeaderTopDistance,
+            scrollPrev = 0,
             scrollDown = distance,          
             distanceHide = settings.distanceHide,
             distanceShow = settings.distanceShow,
@@ -117,43 +85,18 @@ $(function(){
             scrollTopCheck = false,
             scrollToTop = false,
             scrollToDown = false,
-            classAnchor = settings.classAnchor, classAnchorForTop = settings.classAnchorForTop;
-            
-
-            
-        
-        if(typeof distanceHide == 'number') {
-            scrollDown = distanceHide;
-        }        
-
-        if(settings.ifHeaderTop != undefined) {
-            ifHeaderTopClass = settings.ifHeaderTop[0];
+            ifHeaderTopClass = settings.ifHeaderTop[0],
             ifHeaderTopDistance = settings.ifHeaderTop[1];
-        }
         
-
         function ifHeaderTop() {
-            if(scrolled <= ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
+            if(scrolled <= ifHeaderTopDistance) {
                 $(header).addClass(ifHeaderTopClass);
-                if(classAnchorForTop == true) {
-                    $(header).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                    $.each($('[data-hh-anchor]'), function() {                            
-                        $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                    })
-                }
             }
-            else if (scrolled > ifHeaderTopDistance && typeof ifHeaderTopClass == 'string') {
+            else if (scrolled > ifHeaderTopDistance) {
                 $(header).removeClass(ifHeaderTopClass);
-                if(classAnchorForTop == true) {
-                    $.each($('[data-hh-anchor]'), function() {                            
-                        $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                    })
-                }
             }
         }
-        if(typeof ifHeaderTopClass == 'string') {
-            ifHeaderTop();
-        }
+        ifHeaderTop();
         let lazyImgCheck;
         function imgLazyActive() {
             lazyImgCheck = $(header).offset().top + $(window).height() + 50;
@@ -168,48 +111,21 @@ $(function(){
             imgLazyActive();
             scrolled = $(window).scrollTop();          
             if (scrolled == 0) {
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeIn(settings.speedAnim);
-                    }
-                    else if (settings.fade == false) {
-                        $(header).slideDown(settings.speedAnim);
-                    }
-                    
-                }
-                else {
-                    $(header).removeClass(settings.classToHide);
-                }
+                $(header).removeClass(settings.classToHide);
                 scrollTopCheck = true;
             }
-            
-            if(typeof ifHeaderTopClass == 'string') {
-                ifHeaderTop();
-            }
-    
+            ifHeaderTop();
             if (scrolled > 100 && scrolled > scrollPrev) {
                 if (scrollToDown == false) {
                     scrollToTop = false;
-                    
-                    if(typeof distanceHide == 'number') {
-                        scrollDown = scrolled + distanceHide;
-                    }
-                    else {
-                        scrollDown = scrolled + distance;
-                    }
+                    scrollDown = scrolled + distanceHide;
                     scrollDownCheck = false;
                     scrollToDown = true;
                 }
                 
             } else if (scrollToTop == false) {
-                
                     scrollToDown = false;
-                    if(typeof distanceShow == 'number') {
-                        scrollTop = scrolled - distanceShow;
-                    }
-                    else {
-                        scrollTop = scrolled - distance;
-                    }
+                    scrollTop = scrolled - distanceShow;
                     scrollTopCheck = false;
                     scrollToTop = true;
                 }
@@ -217,53 +133,12 @@ $(function(){
             scrollPrev = scrolled;
             if (scrolled >= scrollDown && scrollDownCheck == false) {
                 // hide elem
-                
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeOut(settings.speedAnim);
-                    }
-                    else if (settings.fade == false) {
-                        $(header).slideUp(settings.speedAnim);
-                    }
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
-                else {
-                    $(header).addClass(settings.classToHide);
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).addClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
+                $(header).addClass(settings.classToHide);
                 scrollDownCheck = true;
             }
             if (scrollTop >= scrolled && scrollTopCheck == false) {
                 // show elem
-                if (settings.classToHide == undefined) {
-                    if (settings.fade == true) {
-                        $(header).fadeIn(settings.speedAnim);
-                    }
-                    else if (settings.fade == false) {
-                        $(header).slideDown(settings.speedAnim);
-                    }
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
-                else {
-                    $(header).removeClass(settings.classToHide);
-                    if(classAnchor == true) {
-                        $.each($('[data-hh-anchor]'), function() {                            
-                            $(this).removeClass($('[data-hh-anchor]').data('hh-anchor'));
-                        })
-                    }
-                }
+                $(header).removeClass(settings.classToHide);
                 scrollTopCheck = true;
             }
         });
@@ -282,9 +157,6 @@ $(function(){
     });
    
     function formKeySwitch(settings) {
-        if (settings.formElem == undefined) {
-            return false;
-        }
         
         let form_input = settings.formElem,
             inputChek = true,
@@ -292,11 +164,6 @@ $(function(){
             inputLength = form_input.length - 1,
             inputLast = $(form_input[inputLength]).data('input-id'),
             inputId;
-
-
-            if (settings.focusClass == undefined) {
-                focusClass = 'focus';
-            }
 
         function nextInput(e) {
             if (e.data('input-id') != inputLast && inputChek == true) {
